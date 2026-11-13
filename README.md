@@ -31,12 +31,23 @@ sentiment-app/
 ├── .gitignore
 ├── data/            # jeux de données (versionnés par DVC à partir de la semaine 7)
 ├── models/          # modèles entraînés (jamais dans Git)
-├── app/             # API FastAPI (semaine 3)
+├── api/             # API FastAPI (semaine 3)
+├── src/             # génération, entraînement, évaluation et prédiction
 ├── ui/              # Streamlit (semaine 5)
-├── tests/           # pytest (semaine 1 : tests d'environnement)
+├── tests/           # tests pytest
 ├── scripts/         # utilitaires (check_setup, nouveau cas de cadrage)
-└── docs/cadrage/    # fiches de cadrage du TP1
+└── docs/            # cadrage et comptes rendus des TP
 ```
+
+## Lancer l'API de sentiment (semaine 3)
+
+Après avoir installé les dépendances et entraîné le modèle (`python src/train.py`) :
+
+```bash
+uvicorn api.main:app --reload
+```
+
+L'API est disponible à `http://localhost:8000` et sa documentation interactive à `http://localhost:8000/docs`.
 
 ## Membres du binôme
 
