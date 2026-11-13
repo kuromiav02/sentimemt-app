@@ -13,7 +13,7 @@ Les équipes du service client et les responsables de la relation client qui gè
 Cocher une seule case :
 
 - [ ] Règles métier
-- [X] Machine learning
+- [x] Machine learning
 - [ ] RAG
 - [ ] Modèle génératif seul
 
@@ -24,13 +24,13 @@ Cette approche s'appuie sur l'exploitation d'un historique de données étiquet�
 L'historique des avis clients et des tickets de support passés, annotés et classés selon leur niveau de criticité par les équipes opérationnelles.
 
 ## Métrique de succès et seuil d'acceptation (obligatoire)
-
+Un rappel supérieur à 90 % sur les avis à haute criticité est le seuil d'acceptation, afin de minimiser les réclamations urgentes non détectées. La mesure sera calculée sur un jeu de test annoté par le service client.
 
 ## Conséquence d'une erreur et validation humaine prévue (obligatoire)
-Un taux de rappel (sensibilité) supérieur à 90 % sur la détection des avis à haute criticité, afin de minimiser le risque de laisser sans réponse un client en situation de crise.
+Un faux négatif peut retarder la prise en charge d'un client en difficulté, tandis qu'un faux positif mobilise inutilement un conseiller. Un conseiller humain vérifie les avis prioritaires et décide de l'action à mener.
 
 ## Risques éthiques ou de confidentialité (obligatoire)
-Une erreur de classification (faux négatif) retarde l'intervention sur un problème critique, tandis qu'un faux positif surcharge temporairement le support. Un conseiller humain conserve le contrôle final pour valider la priorisation et décider de l'action à mener.
+Les avis peuvent contenir des données personnelles et des propos sensibles ; leur accès doit être limité et leur conservation réduite au nécessaire. Les annotations et les résultats seront surveillés pour repérer les biais entre groupes de clients.
 
 ## Approche écartée et pourquoi (facultatif)
 L'approche par « Règles métier » a été écartée car la diversité, le sarcasme et la complexité du langage naturel dans les avis clients rendent les moteurs basés sur des mots-clés trop rigides et inefficaces.
