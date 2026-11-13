@@ -7,6 +7,8 @@ from pathlib import Path
 
 import pytest
 
+from api.model import SEUIL_ABSTENTION
+
 MODELE = Path(__file__).resolve().parents[1] / "models" / "sentiment.joblib"
 pytestmark = pytest.mark.skipif(not MODELE.exists(), reason="modèle non produit : python src/train.py")
 
@@ -14,6 +16,7 @@ pytestmark = pytest.mark.skipif(not MODELE.exists(), reason="modèle non produit
 @pytest.fixture(scope="module")
 def client():
     from fastapi.testclient import TestClient
+
     from api.main import app
     with TestClient(app) as c:  # le "with" déclenche lifespan (chargement du modèle)
         yield c
@@ -45,6 +48,13 @@ def test_predict_negatif(client):
     r = client.post("/predict", json={"text": "Produit cassé et service injoignable, à fuir"})
     assert r.status_code == 200
     assert r.json()["label"] == "NEGATIVE"
+
+
+def test_predict_texte_inconnu_s_abstient(client):
+    r = client.post("/predict", json={"text": "xqzv plmokn wjrtf"})
+    assert r.status_code == 200
+    assert r.json()["label"] == "INDETERMINE"
+    assert 0.0 <= r.json()["score"] < SEUIL_ABSTENTION
 
 
 def test_predict_texte_vide_422(client):

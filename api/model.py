@@ -3,12 +3,22 @@
 L'API n'entraîne rien et ne connaît pas scikit-learn : elle appelle la fonction
 predict() de src/predict.py, qui charge models/sentiment.joblib une seule fois.
 """
-import sys
-from pathlib import Path
+from typing import Literal, TypedDict
 
-RACINE = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(RACINE / "src"))
-from predict import MODELE, charger_modele, predict as _predict  # noqa: E402  (fonctions du TP2)
+from src.predict import charger_modele
+from src.predict import predict as _predict
+
+SEUIL_ABSTENTION = 0.70
+ETIQUETTES_MODELE: dict[str, Literal["POSITIVE", "NEGATIVE"]] = {
+    "positive": "POSITIVE",
+    "negative": "NEGATIVE",
+}
+
+
+class ApiPrediction(TypedDict):
+    label: Literal["POSITIVE", "NEGATIVE", "INDETERMINE"]
+    score: float
+    text: str
 
 
 class SentimentClassifier:
@@ -17,12 +27,17 @@ class SentimentClassifier:
     model_name = "tfidf-logreg (TP2, models/sentiment.joblib)"
 
     def __init__(self) -> None:
-        charger_modele()  # échoue immédiatement si le joblib manque : on ne démarre pas sans modèle
+        pipeline = charger_modele()
+        classes = {str(label).lower() for label in pipeline.classes_}
+        if classes != set(ETIQUETTES_MODELE):
+            raise ValueError(f"Classes du modèle non prises en charge : {sorted(classes)}")
 
-    def predict(self, text: str) -> dict:
-        """Renvoie {'label': 'POSITIVE'|'NEGATIVE', 'score': float, 'text': aperçu}."""
-        r = _predict(text)  # lève ValueError si le texte est vide
-        return {"label": r["label"].upper(), "score": r["score"], "text": text[:100]}
+    def predict(self, text: str) -> ApiPrediction:
+        """Renvoie le verdict, la confiance et un aperçu du texte."""
+        prediction = _predict(text)
+        mapped_label = ETIQUETTES_MODELE[prediction["label"]]
+        label = mapped_label if prediction["score"] >= SEUIL_ABSTENTION else "INDETERMINE"
+        return {"label": label, "score": prediction["score"], "text": text[:100]}
 
 
 def load_model() -> SentimentClassifier:
