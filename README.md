@@ -49,6 +49,16 @@ uvicorn api.main:app --reload
 
 L'API est disponible à `http://localhost:8000` et sa documentation interactive à `http://localhost:8000/docs`.
 
+## Lancer l'interface Streamlit (semaine 5)
+
+Dans un second terminal, avec l'environnement virtuel activé :
+
+```bash
+streamlit run ui/app.py
+```
+
+La page s'ouvre à `http://localhost:8501` et utilise l'API déjà démarrée dans le premier terminal.
+
 ## Membres du binôme
 
 | Rôle | Nom | Identifiant GitHub | Travail de la semaine 1 |
